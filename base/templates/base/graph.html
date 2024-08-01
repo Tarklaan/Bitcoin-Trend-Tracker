@@ -1,0 +1,14 @@
+{% extends "main.html" %}
+{% block content %}
+{% load static %}
+<h1>Bitcoin Data</h1>
+<div id="bitcoinGraph"></div>
+
+<script>
+    var graphJSON = {{ graphJSON|safe }};
+
+    Plotly.plot('bitcoinGraph', graphJSON, {
+        margin: { t: 0 }
+    });
+</script>
+{% block content %}

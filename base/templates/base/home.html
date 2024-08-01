@@ -1,0 +1,134 @@
+{% extends "main.html" %}
+{% block content %}
+{% load static %}
+
+<header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
+    <div class="text w3-display-left w3-text-white" style="padding:48px">
+        <span class="w3-jumbo w3-hide-small">Start Predicting Bitcoin trends with AI</span><br>
+        <span class="w3-xxlarge w3-hide-large w3-hide-medium">Start Predicting Bitcoin trends with AI</span><br>
+        <span class="w3-large">Click the button to predict new trend sentiment assisted.</span>
+        <p><a href="{% url 'predictpage' %}" class="predict-link w3-button w3-white w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-off" data-message="Preparing AI...">Predict Bitcoin</a></p>
+    </div> 
+    <div class="w3-display-bottomleft w3-text-grey w3-large" style="padding:24px 48px">
+        <i class="fa fa-facebook-official w3-hover-opacity"></i>
+        <i class="fa fa-instagram w3-hover-opacity"></i>
+        <i class="fa fa-snapchat w3-hover-opacity"></i>
+        <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+        <i class="fa fa-twitter w3-hover-opacity"></i>
+        <i class="fa fa-linkedin w3-hover-opacity"></i>
+    </div>
+</header>
+
+<section id="features-section"> 
+    <h1>Key Features</h1>
+
+    <div data-url="{% url 'modelHistory' %}" data-message="Preparing data..." class="feature-card w3-animate-left">
+        <img src="{% static 'images/accuracy.png' %}" alt="Bitcoin trend prediction">
+        <div class="card-content">
+            <p>Leverage our advanced AI algorithms to get precise predictions for Bitcoin price movements and stay ahead of the market.</p>
+        </div>
+        <h4>Accurate Trend Predictions</h4>
+    </div>
+
+    <div data-url="{% url 'bitcoinData' %}" data-message="Preparing data..." class="feature-card w3-animate-left">
+        <img src="{% static 'images/history.png' %}" alt="Explore historical trends">
+        <div class="card-content">
+            <p>Gain valuable insights by analyzing historical Bitcoin data and make informed investment decisions.</p>
+        </div>
+        <h4>Explore Historical Trends</h4>
+    </div>
+
+    <div data-url="{% url 'otherCrypto' %}" data-message="Preparing AI..." class="feature-card w3-animate-left">
+        <img src="{% static 'images/crypto.png' %}" alt="UI">
+        <div class="card-content">
+            <p>Our system uses a generalized ML model to figure out the complex dependencies in the past prices of other crypto and predict the future trends.</p>
+        </div>
+        <h4>Other Crypto Predictions</h4>
+    </div>
+</section>
+
+<header class="bgimg-2 w3-display-container w3-grayscale-min">
+    <div class="text w3-display-left w3-text-white" style="padding:48px">
+        <span class="w3-jumbo w3-hide-small">See the trends for other cryptos predicted with AI</span><br>
+        <span class="w3-xxlarge w3-hide-large w3-hide-medium">See the trends for other cryptos predicted with AI</span><br>
+        <span class="w3-large">Click the button to predict other cryptos into the future.</span>
+        <p><a href="{% url 'otherCrypto' %}" class="predict-link w3-button w3-white w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-off" data-message="Preparing AI...">Predict Other Crypto</a></p>
+    </div> 
+</header>
+
+<footer>
+    <p>&copy; 2023 Bitcoin Trend tracker</p>
+</footer>
+
+<script>
+    document.querySelectorAll('.feature-card, .predict-link').forEach(function(element) {
+        element.addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('loading-message').textContent = this.getAttribute('data-message');
+            document.getElementById('loading-overlay').style.display = 'flex';
+            setTimeout(() => {
+                window.location.href = this.getAttribute('data-url') || this.href;
+            }, 2000); 
+        });
+    });
+</script>
+
+<style>
+    .feature-card {
+        padding: 20px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        text-align: center; 
+        font-size: 12px; 
+        cursor: pointer;
+    }
+
+    .card-content {
+        text-align: center; /* Center the text in the card */
+    }
+
+    .intro-link {
+        background-color: #FFDB00; 
+        color: #FFFFFF; 
+        border: 2px solid #CC3700; 
+        padding: 10px 20px;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 5px;
+    }
+
+    .intro-link:hover {
+        background-color: yellow; /* Tomato Red */
+    }
+
+    .bgimg-1 {
+        background-position: center;
+        background-size: cover;
+        background-image: url({% static 'images/image1.webp' %});
+        min-height: 100%;
+        font-size: 50px;
+    }
+
+    .bgimg-2 {
+        background-position: center;
+        background-size: cover;
+        background-image: url({% static 'images/img2.webp' %});
+        height: 100%;
+    }
+
+    .w3-bar .w3-button {
+        padding: 16px;
+    }
+
+    .text {
+        background-color: rgba(0, 0, 0, 0.6); /* White background with 40% opacity */
+        margin-left: 20px;
+        backdrop-filter: blur(5px); 
+        -webkit-backdrop-filter: blur(5px); 
+        padding: 10px; 
+        color: black; 
+        border-radius: 10px; 
+    }
+</style>
+
+{% endblock content %}

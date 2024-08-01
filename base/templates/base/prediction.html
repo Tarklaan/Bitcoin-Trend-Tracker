@@ -1,0 +1,181 @@
+{% extends "main.html" %}
+{% block content %}
+<h1 style="font-size: 40px; margin-left:23%; margin-top:100px; font-weight: bold; text-decoration: underline;">Bitcoin Prediction for 15 days in USD$ (sentiments assisted)</h1>
+<section id="prediction-section">
+  <div style="position: relative;">
+    <button id="fullscreen-chart-btn" class="cta-button" style="position: absolute; top: 10px; right: 10px; z-index: 10;">Full Screen</button>
+    <canvas id="prediction-chart" width="400" height="200"></canvas>
+  </div>
+  <div  style="margin: 20px 0; text-align: center;">
+    <p id="investment-advice" style="font-weight: bold; color: #d9534f; font-size: 50px;">{{ investment_advice }}</p>
+  </div>
+  <div style="position: relative; margin-top: 20px;">
+    <button id="fullscreen-table-btn" class="cta-button" style="position: absolute; top: 10px; right: 10px; z-index: 10;">Full Screen</button>
+    <div class="table-container">
+      <table id="prediction-table">
+          <thead>
+              <tr>
+                  <th>Date</th>
+                  <th>Price</th>
+                  <th>Trend</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for date, prediction, trend in predictions_with_dates %}
+              <tr>
+                  <td>{{ date }}</td>
+                  <td>${{ prediction|floatformat:2 }}</td>
+                  <td>{{ trend }}</td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<footer>
+  <p>&copy; 2023 Bitcoin Prediction App</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+      const ctx = document.getElementById('prediction-chart').getContext('2d');
+      const labels = [{% for date, prediction, trend in predictions_with_dates %}'{{ date }}',{% endfor %}];
+      const data = {
+          labels: labels,
+          datasets: [{
+              label: 'Predicted Prices',
+              data: [{% for date, prediction, trend in predictions_with_dates %}{{ prediction }},{% endfor %}],
+              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              fill: false,
+              tension: 0.1
+          }]
+      };
+      const config = {
+          type: 'line',
+          data: data,
+          options: {
+              responsive: true,
+              scales: {
+                  x: {
+                      display: true,
+                      title: {
+                          display: true,
+                          text: 'Date'
+                      }
+                  },
+                  y: {
+                      display: true,
+                      title: {
+                          display: true,
+                          text: 'Price'
+                      }
+                  }
+              }
+          }
+      };
+      const myChart = new Chart(ctx, config);
+
+      // Fullscreen functionality for the chart
+      const chartElement = document.getElementById('prediction-chart').parentNode;
+      const chartBtn = document.getElementById('fullscreen-chart-btn');
+      chartBtn.addEventListener('click', () => {
+          if (!document.fullscreenElement) {
+              chartElement.requestFullscreen().catch(err => {
+                  alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+              });
+          } else {
+              document.exitFullscreen();
+          }
+      });
+
+      // Fullscreen functionality for the table
+      const tableElement = document.getElementById('prediction-table').parentNode;
+      const tableBtn = document.getElementById('fullscreen-table-btn');
+      tableBtn.addEventListener('click', () => {
+          if (!document.fullscreenElement) {
+              tableElement.requestFullscreen().catch(err => {
+                  alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+              });
+          } else {
+              document.exitFullscreen();
+          }
+      });
+
+      // Change button text on fullscreen change and handle full-screen styles
+      document.addEventListener('fullscreenchange', (event) => {
+          if (document.fullscreenElement) {
+              if (document.fullscreenElement === chartElement) {
+                  chartBtn.textContent = 'Exit Full Screen';
+              } else if (document.fullscreenElement === tableElement) {
+                  tableBtn.textContent = 'Exit Full Screen';
+                  tableElement.classList.add('fullscreen');
+              }
+          } else {
+              chartBtn.textContent = 'Full Screen';
+              tableBtn.textContent = 'Full Screen';
+              tableElement.classList.remove('fullscreen');
+          }
+      });
+  });
+</script>
+<style>
+  #prediction-section {
+      margin: 20px;
+  }
+
+  #prediction-chart {
+      margin-bottom: 20px;
+  }
+
+  .table-container {
+      overflow-x: auto;
+  }
+
+  #prediction-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+  }
+
+  #prediction-table th, #prediction-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+  }
+
+  #prediction-table th {
+      background-color: #f2f2f2;
+  }
+
+  .cta-button {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: small;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      text-align: center;
+  }
+
+  footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: small;
+  }
+
+  /* Fullscreen styles */
+  .fullscreen {
+      background-color: #ffffff;
+      color: #000000;
+  }
+
+  .fullscreen th, .fullscreen td {
+      color: #000000;
+  }
+</style>
+{% endblock content %}

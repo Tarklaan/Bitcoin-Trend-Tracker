@@ -1,0 +1,145 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Bitcoin Trend Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url({% static 'images/about.webp' %}) no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            color: #333; 
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.1); 
+            font-size: 21px;
+        }
+
+        header {
+            background-color: #222;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .parts {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .parts h2 {
+            color: #555;
+            border-bottom: 2px solid #f1c40f;
+            padding-bottom: 10px;
+        }
+
+        .choices {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .choices div {
+            flex: 1;
+            min-width: 250px;
+            padding: 10px;
+        }
+
+        .choices div h3 {
+            color: #f39c12;
+            margin-top: 0;
+        }
+
+        footer {
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+        .team {
+            background-color:white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .team div {
+            background-color:#BBE9FF;
+            text-align: center;
+            font-weight: bold;
+            font-style: italic;
+        }
+        
+        .team img {
+            width: 300px; /* Adjust as needed */
+            height: 300px;
+            display: block;
+            margin: 0 auto;
+        }
+        
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>About Us</h1>
+    </header>
+
+    <div class="parts">
+        <h2>Overview</h2>
+        <p>Welcome to our Cryptocurrency Prediction Platform!</p>
+        <p>Cryptocurrencies have revolutionized the financial world, offering new opportunities for investment and trading. Among them, Bitcoin stands as a pioneer, symbolizing the potential and volatility of digital currencies. Our platform leverages advanced machine learning techniques to predict cryptocurrency prices, providing users with valuable insights to make informed investment decisions.</p>
+    </div>
+
+    <div class="parts">
+        <h2>Our Mission</h2>
+        <p>Our mission is to empower users with cutting-edge tools and insights to navigate the complex world of cryptocurrency trading. By combining the power of machine learning with comprehensive market analysis, we aim to provide accurate and reliable predictions to help users maximize their investment potential.</p>
+    </div>
+
+    <div class="parts">
+        <h2>Machine Learning and Price Prediction</h2>
+        <p>Predicting the prices of cryptocurrencies, especially Bitcoin, involves analyzing vast amounts of historical data and identifying patterns that can indicate future movements. Our platform uses advanced machine learning models, trained on extensive historical data, to predict future price trends. These models analyze various factors, including past price movements, trading volumes, and other market indicators, to generate accurate predictions.</p>
+    </div>
+
+    <div class="parts">
+        <h2>The Role of Market Sentiment</h2>
+        <p>Market sentiment plays a crucial role in predicting cryptocurrency prices. Unlike traditional financial assets, cryptocurrencies are highly influenced by public perception and news events. Positive news, endorsements from influential figures, or technological advancements can drive prices up, while negative news, regulatory concerns, or security breaches can lead to sharp declines. Our platform incorporates sentiment analysis to gauge market sentiment from various sources, including social media, news articles, and forums. By understanding market sentiment, our models can better predict how public perception will impact future price movements.</p>
+    </div>
+
+    <div class="parts">
+        <h2>About This Project</h2>
+        <p>This project is a culmination of extensive research and development in the fields of machine learning and financial analysis. Our team of experts has meticulously crafted models that are tailored to capture the unique dynamics of the cryptocurrency market.</p>
+        <p>The generalization of our models is a critical aspect, ensuring that the predictions are not only accurate for Bitcoin but also for other cryptocurrencies. By training our models on a diverse dataset that includes various cryptocurrencies, we enhance their ability to recognize patterns and trends across different digital assets. This allows our platform to predict prices for a wide range of cryptocurrencies, providing users with a comprehensive tool for their investment strategies.</p>
+        <p>The platform offers a user-friendly interface where users can explore predictions for various cryptocurrencies, visualize trends, and receive personalized investment advice. With continuous updates and improvements, we strive to deliver the most reliable and up-to-date information to our users.</p>
+    </div>
+
+    <div class="parts">
+        <h2>Why Choose Us?</h2>
+        <p>In the fast-paced and ever-changing world of cryptocurrencies, having accurate and timely information is crucial. Our platform stands out by offering not just price predictions, but a holistic view of the market that includes sentiment analysis and trend identification. Whether you are a seasoned trader or a newcomer, our tools are designed to help you make informed decisions and stay ahead in the cryptocurrency market.</p>
+        <p>Thank you for choosing our platform. We are committed to continuously improving our models and features to provide you with the best possible insights and support on your investment journey.</p>
+        <p>Join us as we navigate the exciting world of cryptocurrencies together!</p>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2024 Bitcoin Trend Tracker. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,246 @@
+{% extends "main.html" %}
+{% block content %}
+{% load static %}
+
+<style>
+    .crypto-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 20px;
+    }
+
+    .crypto-item {
+        position: relative;
+        width: 150px;
+        margin: 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+
+    .crypto-item:hover {
+        transform: scale(1.1);
+    }
+
+    .crypto-item img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 2px solid #ddd;
+        transition: border-color 0.3s;
+    }
+
+    .crypto-item:hover img {
+        border-color: #4CAF50;
+    }
+
+    .crypto-item p {
+        margin-top: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .checkbox-container {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+    }
+
+    .crypto-item input[type="checkbox"] {
+        display: none;
+    }
+
+    .crypto-item input[type="checkbox"] + label {
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        display: block;
+    }
+
+    .crypto-item input[type="checkbox"]:checked + label {
+        background-color: #4CAF50;
+    }
+
+    .crypto-item input[type="checkbox"]:checked + label:after {
+        content: '✔';
+        color: white;
+        display: block;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    #prediction-graph-container {
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    #prediction-graph {
+        width: 100%;
+        height: 400px;
+    }
+
+    #investment-advice {
+        margin-top: 20px;
+        font-size: 40px;
+        font-weight: bold;
+        margin-left:300px;
+        color: #d9534f; 
+    }
+
+    #selected-prices-table {
+        margin-top: 20px;
+        width: 80%;
+        margin-left: 10%;
+        border-collapse: collapse;
+    }
+
+    #selected-prices-table th, #selected-prices-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+
+    #selected-prices-table th {
+        background-color: #f2f2f2;
+        font-size: 18px;
+    }
+</style>
+
+<h1 style="font-size: 40px; margin-left:23%; margin-top:100px; font-weight: bold; text-decoration: underline;">Crypto Currencies: Select any to track 10-days trends(USD$)</h1>
+<div class="crypto-container">
+    {% for crypto in cryptos %}
+    <div class="crypto-item" data-ticker="{{ crypto.ticker }}">
+        <div class="checkbox-container">
+            <input type="checkbox" id="checkbox-{{ crypto.ticker }}" data-ticker="{{ crypto.ticker }}">
+            <label for="checkbox-{{ crypto.ticker }}"></label>
+        </div>
+        <img src="{{ crypto.image_url }}" alt="{{ crypto.name }}">
+        <p>{{ crypto.name }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<div id="prediction-graph-container">
+    <canvas id="prediction-graph"></canvas>
+</div>
+
+<div id="investment-advice">
+    <p>{{ investment_advice }}</p>
+</div>
+
+<table id="selected-prices-table">
+    <thead>
+        <tr>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const ctx = document.getElementById('prediction-graph').getContext('2d');
+        let chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: []
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Price'
+                        }
+                    }
+                }
+            }
+        });
+
+        const predictions = {{ predictions|safe }};
+        const selectedPricesTable = document.querySelector('#selected-prices-table');
+        const selectedPricesTableBody = selectedPricesTable.querySelector('tbody');
+        const selectedPricesTableHead = selectedPricesTable.querySelector('thead tr');
+
+        function updateSelectedPricesTable(dates, prices, name) {
+            // Add a new header column for the cryptocurrency
+            const nameHeader = document.createElement('th');
+            nameHeader.textContent = name;
+            selectedPricesTableHead.appendChild(nameHeader);
+
+            // Add prices to each row under the corresponding date
+            prices.forEach((price, index) => {
+                let row = selectedPricesTableBody.rows[index];
+                if (!row) {
+                    row = document.createElement('tr');
+                    const dateCell = document.createElement('td');
+                    dateCell.textContent = dates[index];
+                    row.appendChild(dateCell);
+                    selectedPricesTableBody.appendChild(row);
+                }
+                const priceCell = document.createElement('td');
+                priceCell.textContent = price;
+                row.appendChild(priceCell);
+            });
+        }
+
+        function removeColumnFromTable(name) {
+            const columnIndex = Array.from(selectedPricesTableHead.cells).findIndex(th => th.textContent === name);
+            if (columnIndex > -1) {
+                selectedPricesTableHead.deleteCell(columnIndex);
+                Array.from(selectedPricesTableBody.rows).forEach(row => {
+                    row.deleteCell(columnIndex);
+                });
+            }
+        }
+
+        document.querySelectorAll('.crypto-item').forEach((item) => {
+            item.addEventListener('click', () => {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                checkbox.checked = !checkbox.checked;
+                const ticker = checkbox.dataset.ticker;
+                const name = item.querySelector('p').textContent;
+
+                if (checkbox.checked) {
+                    const data = predictions[name];
+                    const dataset = {
+                        label: name,
+                        data: data.prices,
+                        borderColor: '#' + Math.floor(Math.random() * 16777215).toString(16),
+                        fill: false
+                    };
+                    chart.data.labels = data.dates;
+                    chart.data.datasets.push(dataset);
+                    updateSelectedPricesTable(data.dates, data.prices, name);
+                } else {
+                    chart.data.datasets = chart.data.datasets.filter(dataset => dataset.label !== name);
+                    removeColumnFromTable(name);
+
+                    if (chart.data.datasets.length === 0) {
+                        chart.data.labels = [];
+                    } else {
+                        chart.data.labels = chart.data.datasets[0].data.map((_, index) => predictions.dates[index]);
+                    }
+                }
+
+                chart.update();
+            });
+        });
+    });
+</script>
+{% endblock %}

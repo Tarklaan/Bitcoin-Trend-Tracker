@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bitcoin Trend Tracker{% endblock %}</title>
+    <style>
+        body, h1, h2, h3, h4, h5, h6 {font-family: "Raleway", sans-serif}
+        body, html {
+            height: 100%;
+            line-height: 1.8;
+        }
+        .w3-bar .w3-button {
+            padding: 16px;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        #loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+        .loading-content img {
+            width: 200px; 
+            height: 200px; 
+        }
+        #loading-message {
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            animation: pulse 1s infinite;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+{% load static %}
+
+<header>
+    <nav class="w3-top">
+        <div class="w3-bar w3-white w3-card" id="myNavbar">
+            <a class="w3-bar-item w3-button w3-wide" href="{% url 'home' %}">Bitcoin Trend Tracker AI</a>
+            <div class="w3-right w3-hide-small">
+                <a class="w3-bar-item w3-button predict-link" href="{% url 'predictpage' %}" data-message="Preparing AI...">Bitcoin Prediction</a>
+                <a class="w3-bar-item w3-button data-link" href="{% url 'modelHistory' %}" data-message="Preparing data...">Performance History</a>
+                <a class="w3-bar-item w3-button data-link" href="{% url 'bitcoinData' %}" data-message="Preparing data...">Bitcoin Data</a>
+                <a class="w3-bar-item w3-button predict-link" href="{% url 'otherCrypto' %}" data-message="Preparing AI...">Crypto Prediction</a>
+                <a class="w3-bar-item w3-button" href="{% url 'about' %}">About</a>
+            </div>
+            <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="w3_open()">
+                <i class="fa fa-bars"></i>
+            </a>
+        </div>
+    </nav>
+
+    <nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large" style="display:none" id="mySidebar">
+        <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close ×</a>
+        <a class="w3-bar-item w3-button predict-link" href="{% url 'predictpage' %}" data-message="Preparing AI...">Bitcoin Prediction</a>
+        <a class="w3-bar-item w3-button data-link" href="{% url 'modelHistory' %}" data-message="Preparing data...">Model Performance</a>
+        <a class="w3-bar-item w3-button data-link" href="{% url 'bitcoinData' %}" data-message="Preparing data...">Bitcoin Data</a>
+        <a class="w3-bar-item w3-button predict-link" href="{% url 'otherCrypto' %}" data-message="Preparing AI...">Crypto Prediction</a>
+        <a class="w3-bar-item w3-button" href="#">About</a>
+    </nav>
+</header>
+
+<div id="loading-overlay">
+    <div class="loading-content">
+        <img src="{% static 'images/loading.gif' %}" alt="Loading GIF">
+        <div id="loading-message">Preparing...</div>
+    </div>
+</div>
+
+{% block content %}{% endblock %}
+
+<script>
+    function w3_open() {
+        var mySidebar = document.getElementById("mySidebar");
+        if (mySidebar.style.display === 'block') {
+            mySidebar.style.display = 'none';
+        } else {
+            mySidebar.style.display = 'block';
+        }
+    }
+
+    function w3_close() {
+        var mySidebar = document.getElementById("mySidebar");
+        mySidebar.style.display = "none";
+    }
+
+    document.querySelectorAll('.predict-link, .data-link').forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('loading-message').textContent = this.getAttribute('data-message');
+            document.getElementById('loading-overlay').style.display = 'flex';
+            setTimeout(() => {
+                window.location.href = this.href;
+            }, 2000); 
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,189 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1 style="font-size: 40px; margin-left:20%; margin-top:100px; font-weight: bold; text-decoration: underline;">Machine Learning Model's Performance on Test Data</h1>
+<section id="model-history">
+    <div style="position: relative; overflow: auto;">
+        <button id="fullscreen-chart-btn" class="cta-button" style="position: absolute; top: 10px; right: 10px; z-index: 10;">Full Screen</button>
+        <canvas id="model-history-chart" width="800" height="400"></canvas>
+    </div>
+    <div style="position: relative; overflow: auto; margin-top: 20px; max-height: 400px;">
+        <button id="fullscreen-table-btn" class="cta-button" style="position: absolute; top: 10px; right: 10px; z-index: 10;">Full Screen</button>
+        <table id="model-history-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Actual Value</th>
+                    <th>Predicted Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for date, actual, predicted in data %}
+                <tr>
+                    <td>{{ date }}</td>
+                    <td>${{ actual|floatformat:2 }}</td>
+                    <td>${{ predicted|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="highlighted-paragraph">
+        <p>The Mean Absolute Percentage Error (MAPE) is {{ Error|floatformat:2 }}%. This translates to an accuracy of {{ accuracy|floatformat:2 }}%.</p>
+    </div>
+</section>
+<footer>
+    <p>&copy; 2023 Bitcoin Prediction App</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const ctx = document.getElementById('model-history-chart').getContext('2d');
+        const labels = [{% for date, actual, predicted in data %}'{{ date }}',{% endfor %}];
+        const actualData = [{% for date, actual, predicted in data %}{{ actual }},{% endfor %}];
+        const predictedData = [{% for date, actual, predicted in data %}{{ predicted }},{% endfor %}];
+
+        const data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Actual Value',
+                    data: actualData,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    fill: false,
+                    tension: 0.1
+                },
+                {
+                    label: 'Predicted Value',
+                    data: predictedData,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: false,
+                    tension: 0.1
+                }
+            ]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Value'
+                        }
+                    }
+                }
+            }
+        };
+
+        const myChart = new Chart(ctx, config);
+
+        // Fullscreen functionality for the chart
+        const chartElement = document.getElementById('model-history-chart').parentNode;
+        const chartFullscreenBtn = document.getElementById('fullscreen-chart-btn');
+        chartFullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                chartElement.requestFullscreen().catch(err => {
+                    alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        // Fullscreen functionality for the table
+        const tableElement = document.getElementById('model-history-table').parentNode;
+        const tableFullscreenBtn = document.getElementById('fullscreen-table-btn');
+        tableFullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                tableElement.requestFullscreen().catch(err => {
+                    alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        // Update button text based on fullscreen state
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                chartFullscreenBtn.innerText = 'Exit Full Screen';
+                tableFullscreenBtn.innerText = 'Exit Full Screen';
+            } else {
+                chartFullscreenBtn.innerText = 'Full Screen';
+                tableFullscreenBtn.innerText = 'Full Screen';
+            }
+        });
+    });
+</script>
+
+<style>
+    #model-history {
+        margin: 20px;
+    }
+
+    #model-history-chart {
+        margin-bottom: 20px;
+    }
+
+    #model-history-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    #model-history-table th, #model-history-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        background-color: white; /* Set background color to white */
+    }
+
+    #model-history-table th {
+        background-color: #f2f2f2;
+        text-align: left;
+    }
+    .highlighted-paragraph {
+        background-color: #f9f9f9;
+        padding: 10px;
+        margin: 20px 0;
+        border-left: 4px solid #4CAF50;
+    }
+
+    .cta-button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: small;
+        cursor: pointer;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    footer {
+        margin-top: 20px;
+        text-align: center;
+        font-size: small;
+    }
+
+    /* Styles for full screen */
+    :fullscreen #model-history-table td {
+        background-color: white;
+    }
+</style>
+{% endblock %}
