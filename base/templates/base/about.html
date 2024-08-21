@@ -7,6 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - Bitcoin Trend Tracker</title>
+    <!-- Link to FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -50,48 +52,58 @@
             padding-bottom: 10px;
         }
 
-        .choices {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .choices div {
-            flex: 1;
-            min-width: 250px;
-            padding: 10px;
-        }
-
-        .choices div h3 {
-            color: #f39c12;
-            margin-top: 0;
-        }
-
         footer {
             color: #fff;
             text-align: center;
             padding: 10px 0;
         }
+
         .team {
-            background-color:white;
+            background-color: white;
             display: flex;
             justify-content: space-around;
             align-items: center;
+            margin-top: 30px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        
-        .team div {
-            background-color:#BBE9FF;
-            text-align: center;
-            font-weight: bold;
-            font-style: italic;
-        }
-        
+
         .team img {
-            width: 300px; /* Adjust as needed */
-            height: 300px;
-            display: block;
-            margin: 0 auto;
+            width: 390px; /* Increased size by 30% */
+            height: 390px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 30px;
         }
-        
+
+        .team-info {
+            flex: 1;
+            padding-left: 20px;
+            color: #333;
+        }
+
+        .team-info h3 {
+            margin-top: 0;
+            color: #555;
+        }
+
+        .team-info p {
+            margin: 5px 0;
+        }
+
+        .team-info a {
+            color: #f39c12;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+
+        .team-info a:hover {
+            text-decoration: underline;
+        }
+
+        .team-info i {
+            margin-right: 8px; /* Adds space between icon and text */
+        }
     </style>
 </head>
 <body>
@@ -128,11 +140,17 @@
         <p>The platform offers a user-friendly interface where users can explore predictions for various cryptocurrencies, visualize trends, and receive personalized investment advice. With continuous updates and improvements, we strive to deliver the most reliable and up-to-date information to our users.</p>
     </div>
 
-    <div class="parts">
-        <h2>Why Choose Us?</h2>
-        <p>In the fast-paced and ever-changing world of cryptocurrencies, having accurate and timely information is crucial. Our platform stands out by offering not just price predictions, but a holistic view of the market that includes sentiment analysis and trend identification. Whether you are a seasoned trader or a newcomer, our tools are designed to help you make informed decisions and stay ahead in the cryptocurrency market.</p>
-        <p>Thank you for choosing our platform. We are committed to continuously improving our models and features to provide you with the best possible insights and support on your investment journey.</p>
-        <p>Join us as we navigate the exciting world of cryptocurrencies together!</p>
+    <div class="team">
+        <img src="{% static 'images/mohsin.jpeg' %}" alt="Developer Photo">
+        <div class="team-info">
+            <h3>Abdul Mohsin</h3>
+            <p><a href="https://www.linkedin.com/in/abdul-mohsin-55265a206/" target="_blank">
+                <i class="fab fa-linkedin"></i>LinkedIn</a></p>
+            <p><a href="https://github.com/Tarklaan" target="_blank">
+                <i class="fab fa-github"></i>GitHub</a></p>
+            <p><a href="mailto:mohsin.trklan@gmail.com">
+                <i class="fas fa-envelope"></i>Email</a></p>
+        </div>
     </div>
 </div>
 
